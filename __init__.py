@@ -30,20 +30,24 @@ def _make_key(key: str) -> Fernet:
 
 @app.route('/encrypt/<string:key>/<string:valeur>')
 def encryptage(key, valeur):
+
     f = _make_key(key)
+
     valeur_bytes = valeur.encode()  # Conversion str -> bytes
+
     token = f.encrypt(valeur_bytes)  # Encrypt la valeur
-    # return f"Valeur encryptée : {token.decode()}"  # Retourne le token en str
-    return jsonify({"token_encrypt":
+    return jsonify({"response":
                     token.decode()}), 200  # Retourne le token en str
 
 
 @app.route('/decrypt/<string:key>/<string:valeur>')
 def decryptage(key, valeur):
+
     f = _make_key(key)
+
     token = f.decrypt(valeur)
 
-    return jsonify({"token_decrypt": token.decode()}), 200
+    return jsonify({"response": token.decode()}), 200
 
 
 if __name__ == "__main__":

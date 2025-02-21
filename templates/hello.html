@@ -1,3 +1,80 @@
 <!doctype html>
 <title>CryptoPython</title>
 <h1>Bienvue dans votre atelier CryptoPython !</h1>
+<!-- -->
+
+<form id="form_encrypte" action="{{url_for('encryptage',key='key', valeur='valeur')}}">
+    <fieldset>
+        <label for="form_encrypt_key">Clée de cryptage :</label>
+        <input id="form_encrypt_key" name="form_encrypt_key" type="text" placeholder="Votre clée" required>
+        <label for="form_encrypt_value">Votre message :</label>
+        <textarea id="form_encrypt_value" name="form_encrypt_value" rows="4" cols="50" placeholder="Votre message"
+            required></textarea>
+        <button type="submit">Crypter</button>
+        <textarea name="result_encrypt" id="result_encrypt" rows="4" cols="50" disabled
+            placeholder="Votre message crypté"></textarea>
+    </fieldset>
+</form>
+<form id="form_decrypte" action="{{url_for('decryptage',key='key', valeur='valeur')}}">
+    <fieldset>
+        <label for="form_decrypt_key">Clée de décryptage :</label>
+        <input id="form_decrypt_key" name="form_decrypt_key" type="text" placeholder="Votre clée" required>
+        <label for="form_decrypt_value">Votre message :</label>
+        <textarea id="form_decrypt_value" name="form_decrypt_value" rows="4" cols="50" placeholder="Votre message"
+            required></textarea>
+        <button type="submit">Décrypter</button>
+        <textarea name="result_decrypt" id="result_decrypt" rows="4" cols="50" disabled
+            placeholder="Votre message décrypté"></textarea>
+    </fieldset>
+</form>
+
+<script>
+    const form_encrypte = document.getElementById("form_encrypte")
+    const form_decrypte = document.getElementById("form_decrypte")
+
+    function encrypte(e) {
+        e.preventDefault()
+        const key = document.getElementById("form_encrypt_key")
+        const value = document.getElementById("form_encrypt_value")
+        const display = document.getElementById("result_encrypt")
+        const url = form_encrypte.action
+
+        const params = { "key": key.value, "valeur": value.value }
+
+        getApi(url, params, display)
+
+    }
+
+    function decrypte(e) {
+        e.preventDefault()
+        const key = document.getElementById("form_decrypt_key")
+        const value = document.getElementById("form_decrypt_value")
+        const display = document.getElementById("result_decrypt")
+        const url = form_decrypte.action
+
+        const params = { "key": key.value, "valeur": value.value }
+
+        getApi(url, params, display)
+    }
+
+    function getApi(url, params, display) {
+
+        let get = new XMLHttpRequest();
+        get.onreadystatechange = () => {
+            if (get.readyState == 4 && get.status == 200) {
+
+                const data = JSON.parse(get.responseText)
+                display.value = data.response
+            }
+        }
+        url = url.replace('key/valeur', params.key + "/" + params.valeur)
+        // console.log(params)
+        get.open("GET", url, true)
+        get.send()
+    }
+
+    form_encrypte.addEventListener('submit', encrypte)
+
+    form_decrypte.addEventListener('submit', decrypte)
+
+</script>
