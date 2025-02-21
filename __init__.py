@@ -22,13 +22,15 @@ def encryptage(valeur):
     valeur_bytes = valeur.encode()  # Conversion str -> bytes
     token = f.encrypt(valeur_bytes)  # Encrypt la valeur
     # return f"Valeur encryptée : {token.decode()}"  # Retourne le token en str
-    return jsonify({"token_encrypt": token}), 200  # Retourne le token en str
+    return jsonify({"token_encrypt":
+                    token.decode()}), 200  # Retourne le token en str
 
 
 @app.route('/decrypt/<string:valeur>')
 def decryptage(valeur):
-    token = valeur
-    return jsonify({"token_decrypt": token}), 200
+    token = f.decrypt(valeur)
+
+    return jsonify({"token_decrypt": token.decode()}), 200
 
 
 if __name__ == "__main__":
